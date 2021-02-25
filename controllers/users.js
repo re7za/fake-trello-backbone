@@ -4,6 +4,7 @@ const {
   userExistsByUsername,
 } = require("../repositories/users");
 const { hashPassword, checkPassword } = require("../utils/hash");
+const { generateToken } = require("../utils/jwt");
 
 const registerUser = async (req, res) => {
   try {
@@ -42,9 +43,10 @@ const loginUser = async (req, res) => {
 
     const userPassHash = await getPassHashByUsername(username);
     const isPasswordCorrect = checkPassword(password, userPassHash[0].password);
-
     if (isPasswordCorrect) {
-      res.send({ status: 200, msg: "Loged in successfully" });
+      const token = generateToken({ username });
+
+      res.send({ status: 200, msg: "Loged in successfully", token });
     } else throw "You sucked.. password was wrong!";
   } catch (exp) {
     console.log(exp);
@@ -52,7 +54,12 @@ const loginUser = async (req, res) => {
   }
 };
 
+const whoAmI = async (req, res) => {
+  res.send(req.user);
+};
+
 module.exports = {
   registerUser,
   loginUser,
+  whoAmI,
 };

@@ -3,6 +3,11 @@ const util = require("util");
 
 const query = util.promisify(mysqlConnection.query).bind(mysqlConnection);
 
+const formatRow = function (row) {
+  let { password, ...result } = row;
+  return result;
+};
+
 const userExistsByUsername = async (username) => {
   const results = await query(`select * from user where username = ?`, [
     username,
@@ -24,8 +29,16 @@ const getPassHashByUsername = async (username) => {
   return passHash;
 };
 
+const findByUsername = async (username) => {
+  const results = await query(`select * from user where username = ?`, [
+    username,
+  ]);
+  return !!results.length ? formatRow(results[0]) : null;
+};
+
 module.exports = {
   userExistsByUsername,
   createUser,
   getPassHashByUsername,
+  findByUsername,
 };
