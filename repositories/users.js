@@ -1,12 +1,8 @@
 const mysqlConnection = require("../database/db");
 const util = require("util");
+const formatRow = require("../utils/formatRow");
 
 const query = util.promisify(mysqlConnection.query).bind(mysqlConnection);
-
-const formatRow = function (row) {
-  let { password, ...result } = row;
-  return result;
-};
 
 const userExistsByUsername = async (username) => {
   const results = await query(`select * from user where username = ?`, [
@@ -17,7 +13,8 @@ const userExistsByUsername = async (username) => {
 
 const createUser = async (username, password) => {
   const results = await query(
-    `insert into user (username, password) values ('${username}', '${password}')`
+    `insert into user (username, password) values (?, ?)`,
+    [username, password]
   );
   return results.insertId;
 };

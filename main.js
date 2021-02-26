@@ -1,6 +1,9 @@
 const express = require("express");
 const app = express();
 const usersController = require("./controllers/users");
+const listController = require("./controllers/list");
+const taskController = require("./controllers/task");
+
 var cors = require("cors");
 const port = 3001;
 const { verifyToken } = require("./utils/jwt");
@@ -24,7 +27,6 @@ const auth = async (req, res, next) => {
 
     try {
       let tokenData = verifyToken(token);
-      console.log(tokenData);
       let user = await findByUsername(tokenData.username);
       if (!user) {
         throw "Token is valid, user is invalid";
@@ -39,10 +41,20 @@ const auth = async (req, res, next) => {
   }
 };
 
+app.listen(port, () => {
+  console.log(`Example app listening at http://localhost:${port}`);
+});
+
+// Auth
 app.post("/signup", usersController.registerUser);
 app.post("/login", usersController.loginUser);
 app.get("/whoami", auth, usersController.whoAmI);
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`);
-});
+// List
+app.get("/list", auth, listController.getUsersListsWithTasks);
+app.post("/list", auth, listController.createList);
+app.delete("/list", auth, listController.deleteList);
+
+// Task
+app.post("/task", auth, taskController.createTask);
+app.delete("/task", auth, taskController.deleteTask);

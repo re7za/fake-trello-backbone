@@ -3,8 +3,10 @@ const {
   createUser,
   userExistsByUsername,
 } = require("../repositories/users");
-const { hashPassword, checkPassword } = require("../utils/hash");
 const { generateToken } = require("../utils/jwt");
+
+// Utils
+const { hashPassword, checkPassword } = require("../utils/hash");
 
 const registerUser = async (req, res) => {
   try {
@@ -12,7 +14,7 @@ const registerUser = async (req, res) => {
     const password = req.body.password;
     const userExists = await userExistsByUsername(username);
     if (userExists) {
-      res.send({ status: 422, msg: "User already exists" });
+      res.send({ status: 422, msg: "user already exists" });
       return;
     }
 
@@ -20,7 +22,7 @@ const registerUser = async (req, res) => {
     const insertedUid = await createUser(username, hash);
 
     if (insertedUid) {
-      res.send({ status: 200, msg: "User created", uid: insertedUid });
+      res.send({ status: 200, msg: "user created", uid: insertedUid });
     } else {
       throw "Idk exception";
     }
@@ -37,7 +39,7 @@ const loginUser = async (req, res) => {
 
     const userExists = await userExistsByUsername(username);
     if (!userExists) {
-      res.send({ status: 422, msg: "The username doesn't exist!" });
+      res.send({ status: 422, msg: "the username doesn't exist!" });
       return;
     }
 
@@ -47,10 +49,13 @@ const loginUser = async (req, res) => {
       const token = generateToken({ username });
 
       res.send({ status: 200, msg: "Loged in successfully", token });
-    } else throw "You sucked.. password was wrong!";
-  } catch (exp) {
-    console.log(exp);
-    res.send({ status: 500 });
+    } else console.error("password was wrong!");
+  } catch (exeption) {
+    res.send({
+      status: 400,
+      smg: `mission failed`,
+      exeption,
+    });
   }
 };
 
