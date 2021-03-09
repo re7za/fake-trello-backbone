@@ -15,6 +15,7 @@ const getUsersListsWithTasks = async (req, res) => {
         formattedList[el.lId].push({
           id: el.tId,
           name: el.tName,
+          isDone: el.isDone,
           description: el.description,
         });
       });
@@ -32,7 +33,7 @@ const getUsersListsWithTasks = async (req, res) => {
   } catch (exeption) {
     res.send({
       status: 400,
-      smg: `mission failed`,
+      smg: `mission failed successfully :D`,
       exeption,
     });
   }
@@ -54,7 +55,7 @@ const createList = async (req, res) => {
   } catch (exeption) {
     res.send({
       status: 400,
-      smg: `mission failed`,
+      smg: `mission failed successfully :D`,
       exeption,
     });
   }

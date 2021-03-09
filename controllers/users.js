@@ -53,7 +53,7 @@ const loginUser = async (req, res) => {
   } catch (exeption) {
     res.send({
       status: 400,
-      smg: `mission failed`,
+      smg: `mission failed successfully :D`,
       exeption,
     });
   }

@@ -5,7 +5,7 @@ const query = util.promisify(mysqlConnection.query).bind(mysqlConnection);
 
 const getListsWithTasks = async (username) => {
   const listsWithTasks = await query(
-    `select lId, list.name as lName, tId, task.name as tName, description, deadLine, task.listId as taskParentId from list left join task on list.lId = task.listId`
+    `select lId, list.name as lName, tId, task.name as tName, description, deadLine, task.listId as taskParentId, isDone from list left join task on list.lId = task.listId`
   );
   return listsWithTasks;
 };

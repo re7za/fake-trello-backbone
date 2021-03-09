@@ -50,11 +50,16 @@ app.post("/signup", usersController.registerUser);
 app.post("/login", usersController.loginUser);
 app.get("/whoami", auth, usersController.whoAmI);
 
+// Project
+
 // List
 app.get("/list", auth, listController.getUsersListsWithTasks);
 app.post("/list", auth, listController.createList);
 app.delete("/list", auth, listController.deleteList);
 
 // Task
+app.get("/task", auth, taskController.getTask);
 app.post("/task", auth, taskController.createTask);
+app.put("/task", auth, taskController.updateTask);
 app.delete("/task", auth, taskController.deleteTask);
+app.put("/task/status", auth, taskController.changeTaskStatus);
